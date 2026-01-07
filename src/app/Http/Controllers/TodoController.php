@@ -10,26 +10,18 @@ class TodoController extends Controller
 {
     public function index()
     {
-        $todo = new Todo();
-        $todos = $todo->all();
-        // dd($todos);
+        $todos = $this->todo->all();
 
         return view('todo.index', ['todos' => $todos]);
     }   
 
     public function store(Request $request)
     {
-        // dd('新規作成のルート実行！');
 
         $inputs = $request->all();
 
-        // dd($request); 
-
-        $todo = new Todo(); 
-
-        $todo->fill($inputs);
-
-        $todo->save();
+        $this->todo->fill($inputs);
+        $this->todo->save();
 
         return redirect()->route('todo.index');
     }
@@ -42,9 +34,16 @@ class TodoController extends Controller
     public function show($id)
     {
         $model = new Todo();
-        $todo = $model->find($id);
-        //dd($todo);
+        $todo = $this->todo->find($id);
+        
         return view('todo.show', ['todo' => $todo]);
+    }
+
+    private $todo;
+
+    public function __construct(Todo $todo)
+    {
+        $this->todo = $todo;
     }
     
 }
