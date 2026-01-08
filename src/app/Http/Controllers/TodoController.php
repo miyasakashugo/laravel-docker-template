@@ -10,6 +10,11 @@ class TodoController extends Controller
 {
     private $todo;
 
+    public function __construct(Todo $todo)
+    {
+        $this->todo = $todo;
+    }
+
     public function index()
     {
         $todos = $this->todo->all();
@@ -35,33 +40,27 @@ class TodoController extends Controller
 
     public function show($id)
     {
-        $model = new Todo();
         $todo = $this->todo->find($id);
         
         return view('todo.show', ['todo' => $todo]);
-    }
-
-    public function __construct(Todo $todo)
-    {
-        $this->todo = $todo;
     }
 
     public function edit($id)
     {
         $todo = $this->todo->find($id);
 
+        // dd($todo);
+
         return view('todo.edit', ['todo' => $todo]);
     }
 
     public function update(TodoRequest $request, $id)
     {
-         // TODO: リクエストされた値を取得
         $inputs = $request->all();
+        // dd($inputs);
 
         $todo = $this->todo->find($id);
-        // TODO: 更新対象のデータを取得
         $todo->fill($inputs);
-        // TODO: 更新したい値の代入とUPDATE文の実行
         $todo->save();
 
         return redirect()->route('todo.show', $id);
